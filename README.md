@@ -1,4 +1,5 @@
 Moneto 💰
+
 Moneto adalah **Personal Finance Manager** berbasis web yang membantu kamu mengelola keuangan pribadi dengan cara yang sederhana, jelas, dan terorganisir. Dibangun menggunakan **Next.js**, **Tailwind CSS v4**, dan **Supabase** sebagai backend, Moneto dirancang untuk memberikan pengalaman yang cepat, responsif, dan aman.
 
 ---
@@ -22,7 +23,7 @@ Moneto adalah **Personal Finance Manager** berbasis web yang membantu kamu menge
 
 🚀 Instalasi & Setup
 1. Clone repository:
-   git clone https://github.com/username/moneto.git
+   git clone (https://github.com/Hazama32/Moneto.git)
    cd moneto
 2. Install dependencies:
    npm install
