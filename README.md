@@ -37,11 +37,17 @@ Moneto adalah **Personal Finance Manager** berbasis web yang membantu kamu menge
 ---
 
 📂 Struktur Proyek
+
 moneto/
+
 ├── components/       # Komponen UI reusable
+
 ├── pages/            # Routing Next.js
+
 ├── lib/              # Helper & konfigurasi Supabase
+
 ├── styles/           # Styling global
+
 ├── public/           # Asset statis
 
 ---
