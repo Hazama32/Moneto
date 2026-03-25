@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import {
   BarChart,
@@ -32,12 +33,14 @@ export default function Chart({ transactions }: { transactions: any[] }) {
   }));
 
   return (
-    <div className="w-full h-87.5">
-      <ResponsiveContainer width="100%" height="100%">
+    <div className="w-full h-full min-h-65 sm:min-h-80">
+      <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={260}>
         <BarChart
           data={chartData}
-          margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
+          margin={{ top: 50, right: 20, left: 0, bottom: 25 }}
           barGap={8}
+          barCategoryGap="20%"
+          maxBarSize={60}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="bulan" tick={{ fontSize: 12 }} />
@@ -46,11 +49,13 @@ export default function Chart({ transactions }: { transactions: any[] }) {
             formatter={(value: number | undefined) => value ? `Rp ${value.toLocaleString("id-ID")}` : ""}
             labelStyle={{ fontWeight: "bold" }}
           />
-          <Legend verticalAlign="top" height={36} />
+          <Legend verticalAlign="bottom" height={36} />
           <Bar dataKey="pemasukan" name="Pemasukan" fill="#3B82F6">
             <LabelList
               dataKey="pemasukan"
               position="top"
+              offset={12}
+              style={{ fontSize: 10 }}
               formatter={(v) => v != null ? `Rp ${v.toLocaleString("id-ID")}` : ""}
             />
           </Bar>
@@ -58,6 +63,8 @@ export default function Chart({ transactions }: { transactions: any[] }) {
             <LabelList
               dataKey="pengeluaran"
               position="top"
+              offset={12}
+              style={{ fontSize: 10 }}
               formatter={(v) => v != null ? `Rp ${v.toLocaleString("id-ID")}` : ""}
             />
           </Bar>

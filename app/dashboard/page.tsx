@@ -8,9 +8,25 @@ import StatCard from "@/components/StatCard";
 import BudgetCard from "@/components/BudgetProgress";
 import { motion } from "framer-motion";
 
+interface Transaction {
+  id: string;
+  type: string;
+  amount: number;
+  category?: string;
+  created_at: string;
+  description?: string;
+}
+
+interface Budget {
+  id: string;
+  category: string;
+  limit_amount: number;
+  created_at: string;
+}
+
 export default function DashboardPage() {
-  const [transactions, setTransactions] = useState<any[]>([]);
-  const [budgets, setBudgets] = useState<any[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [budgets, setBudgets] = useState<Budget[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -56,18 +72,18 @@ export default function DashboardPage() {
   const saldo = totalIncome - totalExpense;
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex flex-col lg:flex-row h-screen bg-gray-100">
       {/* Sidebar */}
       <Sidebar />
 
       {/* Main Content */}
-      <main className="flex-1 p-8 space-y-10">
+      <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-8 overflow-y-auto">
         {/* Statistik Ringkas */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="grid grid-cols-1 sm:grid-cols-3 gap-6"
+          className="grid grid-cols-1 md:grid-cols-3 gap-4"
         >
           <StatCard
             title="Pemasukan"
@@ -96,12 +112,12 @@ export default function DashboardPage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6 }}
-            className="bg-white rounded-2xl shadow-lg p-6 lg:col-span-2"
+            className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 lg:col-span-2"
           >
-            <h2 className="text-lg font-semibold text-blue-700">
+            <h2 className="text-base sm:text-lg font-semibold text-blue-700">
               Grafik Keuangan Bulanan
             </h2>
-            <div className="h-80">
+            <div className="h-64 sm:h-80 text-gray-600">
               <Chart transactions={transactions} />
             </div>
           </motion.div>
@@ -113,9 +129,11 @@ export default function DashboardPage() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7 }}
-              className="bg-white rounded-2xl shadow-lg p-6"
+              className="bg-white rounded-2xl shadow-lg p-4 sm:p-6"
             >
-              <h2 className="text-lg font-semibold mb-4 text-blue-700">Budget</h2>
+              <h2 className="text-base sm:text-lg font-semibold mb-4 text-blue-700">
+                Budget
+              </h2>
               <div className="space-y-4">
                 {budgets.map((b) => (
                   <BudgetCard
@@ -137,12 +155,14 @@ export default function DashboardPage() {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="bg-white rounded-2xl shadow-lg p-6 text-black"
+              className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 text-black"
             >
-              <h2 className="text-lg font-semibold mb-4 text-blue-700">
+              <h2 className="text-base sm:text-lg font-semibold mb-4 text-blue-700">
                 Transaksi Terbaru
               </h2>
-              <TransactionList transactions={transactions.slice(0, 5)} />
+              <div className="max-h-60 sm:max-h-80 overflow-y-auto">
+                <TransactionList transactions={transactions.slice(0, 5)} />
+              </div>
             </motion.div>
           </div>
         </div>
