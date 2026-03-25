@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Moneto 💰
+Moneto adalah **Personal Finance Manager** berbasis web yang membantu kamu mengelola keuangan pribadi dengan cara yang sederhana, jelas, dan terorganisir. Dibangun menggunakan **Next.js**, **Tailwind CSS v4**, dan **Supabase** sebagai backend, Moneto dirancang untuk memberikan pengalaman yang cepat, responsif, dan aman.
 
-## Getting Started
+---
 
-First, run the development server:
+✨ Fitur Utama
+- **Dashboard Keuangan**: Ringkasan saldo, pemasukan, dan pengeluaran dalam satu tampilan.
+- **Manajemen Transaksi**: Tambah, edit, dan hapus transaksi dengan kategori yang fleksibel.
+- **Budgeting**: Atur anggaran bulanan dan pantau progres secara otomatis.
+- **Dark Mode**: Dukungan tema gelap yang nyaman untuk mata. (Coming Soon )
+- **Multi-user Support**: Data pengguna aman dengan **Row Level Security (RLS)** di Supabase.
+- **Responsive Design**: Optimal untuk desktop maupun mobile.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+🛠️ Teknologi yang Digunakan
+- [Next.js](https://nextjs.org/) – Framework React untuk frontend.
+- [Tailwind CSS v4](https://tailwindcss.com/) – Utility-first CSS untuk styling.
+- [Supabase](https://supabase.com/) – Database PostgreSQL + autentikasi + API real-time.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+🚀 Instalasi & Setup
+1. Clone repository:
+   git clone https://github.com/username/moneto.git
+   cd moneto
+2. Install dependencies:
+   npm install
+3. Buat file .env.local dan isi dengan konfigurasi Supabase:
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+4. Jalankan development server:
+   npm run dev
+5. Buka http://localhost:3000 di browser.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+📂 Struktur Proyek
+moneto/
+├── components/       # Komponen UI reusable
+├── pages/            # Routing Next.js
+├── lib/              # Helper & konfigurasi Supabase
+├── styles/           # Styling global
+├── public/           # Asset statis
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+🔒 Keamanan
+1. Autentikasi Supabase untuk login/registrasi.
+2. Row Level Security (RLS) memastikan setiap user hanya bisa mengakses datanya sendiri.
+3. Validasi input untuk mencegah error dan menjaga integritas data.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+📈 Roadmap
+1. Integrasi grafik interaktif untuk analisis keuangan.
+2. Fitur ekspor laporan keuangan (PDF/Excel) (Coming Soon)
+3. Notifikasi pengingat budget. (On Progress)
