@@ -34,9 +34,14 @@ export default function ExpenseDetailPage() {
 
   useEffect(() => {
     async function fetchData() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
       const { data: trxData, error } = await supabase
         .from("transactions")
         .select("*")
+        .eq("user_id", user.id)
+        .eq("type", "expense")
         .order("created_at", { ascending: false });
 
       if (error) console.error(error);
@@ -199,7 +204,7 @@ export default function ExpenseDetailPage() {
               <h2 className="text-sm font-semibold text-blue-700 mb-3">
                 Tren Bulanan
               </h2>
-              <div className="h-48">
+              <div className="h-48 text-gray-600">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={barData}>
                     <CartesianGrid strokeDasharray="3 3" />

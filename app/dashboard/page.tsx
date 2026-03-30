@@ -31,14 +31,19 @@ export default function DashboardPage() {
 
   useEffect(() => {
     async function fetchData() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
       const { data: trxData, error: trxError } = await supabase
         .from("transactions")
         .select("*")
+        .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
       const { data: budgetData, error: budgetError } = await supabase
         .from("budgets")
-        .select("*");
+        .select("*")
+        .eq("user_id", user.id);
 
       if (trxError) console.error(trxError);
       if (budgetError) console.error(budgetError);

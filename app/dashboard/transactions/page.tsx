@@ -29,9 +29,13 @@ export default function TransactionsPage() {
   });
 
   async function fetchData() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
     const { data: trxData, error } = await supabase
       .from("transactions")
       .select("*")
+      .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
     if (error) console.error(error);
@@ -47,11 +51,18 @@ export default function TransactionsPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      alert("User belum login");
+      return;
+    }
+
     const newTransaction = {
       type: formData.type,
       amount: parseFloat(formData.amount),
       category: formData.category,
-      description: formData.description
+      description: formData.description,
+      user_id: user.id
     };
 
     const { error } = await supabase.from("transactions").insert([newTransaction]);

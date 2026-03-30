@@ -26,9 +26,13 @@ export default function BudgetPage() {
 
   async function fetchBudgets() {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
       const { data, error } = await supabase
         .from("budgets")
-        .select("id, category, limit_amount, created_at") // ambil kolom sesuai tabel
+        .select("id, category, limit_amount, created_at")
+        .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -47,17 +51,28 @@ export default function BudgetPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      alert("User belum login");
+      return;
+    }
+
     const budgetData = {
       category: formData.category,
       limit_amount: parseFloat(formData.limit_amount),
+      user_id: user.id
     };
 
     try {
       if (editingBudget) {
         const { error } = await supabase
           .from("budgets")
-          .update(budgetData)
-          .eq("id", editingBudget.id);
+          .update({
+            category: budgetData.category,
+            limit_amount: budgetData.limit_amount
+          })
+          .eq("id", editingBudget.id)
+          .eq("user_id", user.id);
 
         if (error) {
           console.error("Error updating budget:", error);

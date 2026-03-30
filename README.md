@@ -1,4 +1,4 @@
-Moneto 💰
+Moneto 💰 (*BETA*)
 
 Moneto adalah **Personal Finance Manager** berbasis web yang membantu kamu mengelola keuangan pribadi dengan cara yang sederhana, jelas, dan terorganisir. Dibangun menggunakan **Next.js**, **Tailwind CSS v4**, dan **Supabase** sebagai backend, Moneto dirancang untuk memberikan pengalaman yang cepat, responsif, dan aman.
 
