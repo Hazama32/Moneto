@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { supabase } from "@/lib/supabaseClient";
 import { useState } from "react";

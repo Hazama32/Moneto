@@ -13,6 +13,7 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
+import * as XLSX from 'xlsx';
 
 const COLORS = ["#10B981", "#3B82F6", "#8B5CF6", "#F59E0B", "#EF4444", "#EC4899"];
 
@@ -122,6 +123,80 @@ export default function ReportsPage() {
   const netIncome = totalIncome - totalExpense;
   const savingsRate = totalIncome > 0 ? ((netIncome / totalIncome) * 100) : 0;
 
+  const exportToExcel = () => {
+    const wb = XLSX.utils.book_new();
+
+    // Sheet 1: Ringkasan
+    const summaryData = [
+      ['Metrik', 'Nilai'],
+      ['Total Pemasukan', totalIncome],
+      ['Total Pengeluaran', totalExpense],
+      ['Saldo', netIncome],
+      ['Tingkat Tabungan', `${savingsRate.toFixed(1)}%`],
+    ];
+    const wsSummary = XLSX.utils.aoa_to_sheet(summaryData);
+    XLSX.utils.book_append_sheet(wb, wsSummary, 'Ringkasan');
+
+    // Sheet 2: Tren Bulanan
+    const monthlyHeaders = ['Bulan', 'Pemasukan', 'Pengeluaran'];
+    const monthlyRows = chartData.map(item => [item.month, item.income, item.expense]);
+    const wsMonthly = XLSX.utils.aoa_to_sheet([monthlyHeaders, ...monthlyRows]);
+    XLSX.utils.book_append_sheet(wb, wsMonthly, 'Tren Bulanan');
+
+    // Sheet 3: Kategori Teratas
+    const categoryHeaders = ['Kategori', 'Total', 'Pemasukan', 'Pengeluaran'];
+    const categoryRows = topCategories.map(item => [item.category, item.total, item.income, item.expense]);
+    const wsCategory = XLSX.utils.aoa_to_sheet([categoryHeaders, ...categoryRows]);
+    XLSX.utils.book_append_sheet(wb, wsCategory, 'Kategori');
+
+    // Sheet 4: Laporan Transaksi
+    const transactionHeaders = ['Keterangan', 'Debit', 'Kredit', 'Saldo', 'Tanggal Catat'];
+    let saldo = 0;
+    const transactionRows = [...transactions]
+      .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+      .map(t => {
+        const keterangan = t.description || t.category || (t.type === 'income' ? 'Pemasukan' : 'Pengeluaran');
+        if (t.type === 'income') {
+          saldo += t.amount;
+          return [keterangan, t.amount, '', saldo, t.created_at];
+        } else {
+          saldo -= t.amount;
+          return [keterangan, '', t.amount, saldo, t.created_at];
+        }
+      });
+    const wsTransactions = XLSX.utils.aoa_to_sheet([transactionHeaders, ...transactionRows]);
+
+    const range = XLSX.utils.decode_range(wsTransactions['!ref'] as string);
+    for (let R = 1; R <= range.e.r; ++R) {
+      const cellRef = XLSX.utils.encode_cell({ c: 3, r: R });
+      const cell = wsTransactions[cellRef];
+      if (cell) {
+        cell.s = {
+          fill: { patternType: 'solid', fgColor: { rgb: 'FFFF0000' } },
+          font: { color: { rgb: 'FFFFFFFF' }, bold: true },
+        };
+      }
+    }
+
+    const headerRange = XLSX.utils.decode_range(wsTransactions['!ref'] as string);
+    for (let C = headerRange.s.c; C <= headerRange.e.c; ++C) {
+      const headerCellRef = XLSX.utils.encode_cell({ c: C, r: 0 });
+      const headerCell = wsTransactions[headerCellRef];
+      if (headerCell) {
+        headerCell.s = {
+          font: { bold: true, color: { rgb: 'FF000000' } },
+          fill: { patternType: 'solid', fgColor: { rgb: 'FFD9D9D9' } },
+        };
+      }
+    }
+
+    XLSX.utils.book_append_sheet(wb, wsTransactions, 'Laporan Transaksi');
+
+    // Download
+    const date = new Date().toISOString().split('T')[0];
+    XLSX.writeFile(wb, `Laporan_Keuangan_${date}.xlsx`);
+  };
+
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
@@ -142,6 +217,14 @@ export default function ReportsPage() {
           <p className="text-sm md:text-base text-gray-600">
             Analisis mendalam performa keuangan Anda
           </p>
+          <motion.button
+            onClick={exportToExcel}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="mt-4 px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition"
+          >
+            Export to Excel
+          </motion.button>
         </motion.div>
 
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
@@ -162,7 +245,7 @@ export default function ReportsPage() {
                 <p className="text-xl font-bold text-red-600">Rp {totalExpense.toLocaleString("id-ID")}</p>
               </div>
               <div className="bg-white rounded-2xl shadow-lg p-5 text-center">
-                <h3 className="text-sm font-semibold text-gray-500 mb-1">Laba Bersih</h3>
+                <h3 className="text-sm font-semibold text-gray-500 mb-1">Saldo</h3>
                 <p className={`text-xl font-bold ${netIncome >= 0 ? "text-green-600" : "text-red-600"}`}>
                   Rp {netIncome.toLocaleString("id-ID")}
                 </p>

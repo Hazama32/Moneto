@@ -7,7 +7,8 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  async function handleLogin() {
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault();
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) alert(error.message);
     else window.location.href = "/dashboard";
@@ -32,7 +33,7 @@ export default function LoginPage() {
         </h2>
 
         {/* Form */}
-        <div className="flex flex-col gap-4">
+        <form onSubmit={handleLogin} className="flex flex-col gap-4">
           <input
             type="email"
             placeholder="Email"
@@ -46,14 +47,14 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <motion.button
+            type="submit"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={handleLogin}
             className="w-full rounded-lg bg-indigo-600 py-3 text-white font-semibold shadow-md hover:bg-indigo-700 transition"
           >
             Login
           </motion.button>
-        </div>
+        </form>
 
         {/* Footer */}
         <p className="mt-6 text-center text-sm text-gray-500">
