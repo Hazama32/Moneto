@@ -59,5 +59,5 @@ moneto/
 
 📈 Roadmap
 1. Integrasi grafik interaktif untuk analisis keuangan.
-2. Fitur ekspor laporan keuangan (PDF/Excel) (Coming Soon)
+2. Fitur ekspor laporan keuangan (Excel)
 3. Notifikasi pengingat budget. (On Progress)
