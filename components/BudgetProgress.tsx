@@ -24,7 +24,7 @@ export default function BudgetProgress({
         ></div>
       </div>
       <p className="text-xs text-gray-500 mt-1">
-        Rp {spent.toLocaleString("id-ID")} / Rp {limit.toLocaleString("id-ID")}
+        Terkumpul: Rp {spent.toLocaleString("id-ID")} / Target: Rp {limit.toLocaleString("id-ID")}
       </p>
     </div>
   );

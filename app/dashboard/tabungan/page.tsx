@@ -15,19 +15,6 @@ interface Budget {
   saved: number;
 }
 
-interface TransactionData {
-  amount: number;
-  category?: string;
-  type: string;
-}
-
-interface BudgetData {
-  id: string;
-  category: string;
-  limit_amount: number;
-  created_at: string;
-}
-
 export default function BudgetPage() {
   const [budgets, setBudgets] = useState<Budget[]>([]);
   const [loading, setLoading] = useState(true);
@@ -70,7 +57,7 @@ export default function BudgetPage() {
       // Calculate saved per category
       const savedMap: { [key: string]: number } = {};
       if (trxData) {
-        trxData.forEach((trx: TransactionData) => {
+        trxData.forEach((trx) => {
           if (trx.category) {
             savedMap[trx.category] = (savedMap[trx.category] || 0) + trx.amount;
           }
@@ -78,7 +65,7 @@ export default function BudgetPage() {
       }
 
       // Combine budgets with saved
-      const budgetsWithSaved = (budgetData || []).map((budget: BudgetData) => ({
+      const budgetsWithSaved = (budgetData || []).map((budget) => ({
         ...budget,
         saved: savedMap[budget.category] || 0,
       }));

@@ -22,6 +22,7 @@ interface Budget {
   category: string;
   limit_amount: number;
   created_at: string;
+  saved: number;
 }
 
 export default function DashboardPage() {
@@ -48,8 +49,26 @@ export default function DashboardPage() {
       if (trxError) console.error(trxError);
       if (budgetError) console.error(budgetError);
 
+      // Calculate saved per category from income transactions
+      const savedMap: { [key: string]: number } = {};
+      if (trxData) {
+        trxData
+          .filter((t) => t.type === "income")
+          .forEach((trx) => {
+            if (trx.category) {
+              savedMap[trx.category] = (savedMap[trx.category] || 0) + trx.amount;
+            }
+          });
+      }
+
+      // Combine budgets with saved
+      const budgetsWithSaved = (budgetData || []).map((budget) => ({
+        ...budget,
+        saved: savedMap[budget.category] || 0,
+      }));
+
       setTransactions(trxData || []);
-      setBudgets(budgetData || []);
+      setBudgets(budgetsWithSaved);
       setLoading(false);
     }
     fetchData();
@@ -137,7 +156,7 @@ export default function DashboardPage() {
               className="bg-white rounded-2xl shadow-lg p-4 sm:p-6"
             >
               <h2 className="text-base sm:text-lg font-semibold mb-4 text-blue-700">
-                Budget
+                Tabungan
               </h2>
               <div className="space-y-4">
                 {budgets.map((b) => (
@@ -145,11 +164,7 @@ export default function DashboardPage() {
                     key={b.id}
                     category={b.category}
                     limit={b.limit_amount}
-                    spent={transactions
-                      .filter(
-                        (t) => t.type === "expense" && t.category === b.category
-                      )
-                      .reduce((sum, t) => sum + t.amount, 0)}
+                    spent={b.saved}
                   />
                 ))}
               </div>

@@ -108,8 +108,8 @@ export default function Sidebar() {
             />
             <SidebarItem
               icon={<WalletIcon className="w-5 h-5" />}
-              label="Budget"
-              href="/dashboard/budget"
+              label="Tabungan"
+              href="/dashboard/tabungan"
               onClick={() => setIsMobileMenuOpen(false)}
             />
             <SidebarItem
